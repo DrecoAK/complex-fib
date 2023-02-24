@@ -12,6 +12,6 @@ jobs:
       - name: Check Docker Login
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker Image
-        run: docker build -t drecoak/client -f ./client/Dockerfile.dev .
+        run: docker build -t drecoak/client -f Dockerfile.dev ./client/
       - name: Run NPM Test
         run: docker run -e CI=true drecoak/client npm run test
