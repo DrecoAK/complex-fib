@@ -1,0 +1,17 @@
+name: Client App Test
+on:
+  pull_request
+    branches:
+      - main 
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check Docker Login
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build Docker Image
+        run: docker build -t drecoak/client -f Dockerfile.dev .
+      - name: Run NPM Test
+        run: docker run -e CI=true drecoak/client npm run test
