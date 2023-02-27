@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check Docker Login
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Build Docker Image
-        run: docker build -t drecoak/client -f ./client/Dockerfile.dev ./client/
+        run: docker build -t drecoak/client-test -f ./client/Dockerfile.dev ./client/
       - name: Run NPM Test
-        run: docker run -e CI=true drecoak/client npm run test
+        run: docker run -e CI=true drecoak/client-test npm run test

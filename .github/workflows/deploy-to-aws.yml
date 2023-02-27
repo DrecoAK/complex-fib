@@ -1,0 +1,32 @@
+name: Deploy Complex Fib
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Login to Docker CLI
+      - name: Docker Login
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        # Build all images
+      - name: Build Client Image
+        run: docker build -t drecoak/multi-client ./client/
+      - name: Build Nginx Image
+        run: docker build -t drecoak/multi-nginx ./nginx/
+      - name: Build Server Image
+        run: docker build -t drecoak/multi-server ./server/
+      - name: Build Worker Image
+        run: docker build -t drecoak/multi-worker ./worker/
+        # Push image to Docker Hub 
+      - name: Build Client Image
+        run: docker push drecoak/multi-client
+      - name: Build Nginx Image
+        run: docker push drecoak/multi-nginx
+      - name: Build Server Image
+        run: docker push drecoak/multi-server
+      - name: Build Worker Image
+        run: docker push drecoak/multi-worker
