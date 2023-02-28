@@ -12,7 +12,7 @@ jobs:
       # Login to Docker CLI
       - name: Docker Login
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-        # Build all images
+      # Build all images
       - name: Build Client Image
         run: docker build -t drecoak/multi-client ./client/
       - name: Build Nginx Image
@@ -21,12 +21,27 @@ jobs:
         run: docker build -t drecoak/multi-server ./server/
       - name: Build Worker Image
         run: docker build -t drecoak/multi-worker ./worker/
-        # Push image to Docker Hub 
-      - name: Build Client Image
+      # Push image to Docker Hub 
+      - name: Push Client Image
         run: docker push drecoak/multi-client
-      - name: Build Nginx Image
+      - name: Push Nginx Image
         run: docker push drecoak/multi-nginx
-      - name: Build Server Image
+      - name: Push Server Image
         run: docker push drecoak/multi-server
-      - name: Build Worker Image
+      - name: Push Worker Image
         run: docker push drecoak/multi-worker
+      # Generate Package for Deployment
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+      # Deploy Project to EBS
+      - name: Deploy to EBS
+        uses: einaregilsson/beanstalk-deploy@v18
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: multi-docker
+          environment_name: Multidocker-env
+          existing_bucket_name: elasticbeanstalk-us-east-2-716983815128
+          region: us-east-2
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
