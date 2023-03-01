@@ -30,18 +30,18 @@ jobs:
         run: docker push drecoak/multi-server
       - name: Push Worker Image
         run: docker push drecoak/multi-worker
-      # Generate Package for Deployment
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
-      # Deploy Project to EBS
-      - name: Deploy to EBS
-        uses: einaregilsson/beanstalk-deploy@v18
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-          application_name: multi-docker
-          environment_name: Multidocker-env
-          existing_bucket_name: elasticbeanstalk-us-east-2-716983815128
-          region: us-east-2
-          version_label: ${{ github.sha }}
-          deployment_package: deploy.zip
+      # # Generate Package for Deployment
+      # - name: Generate deployment package
+      #   run: zip -r deploy.zip . -x '*.git*'
+      # # Deploy Project to EBS
+      # - name: Deploy to EBS
+      #   uses: einaregilsson/beanstalk-deploy@v18
+      #   with:
+      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+      #     aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+      #     application_name: multi-docker
+      #     environment_name: Multidocker-env
+      #     existing_bucket_name: elasticbeanstalk-us-east-2-716983815128
+      #     region: us-east-2
+      #     version_label: ${{ github.sha }}
+      #     deployment_package: deploy.zip
